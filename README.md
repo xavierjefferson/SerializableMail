@@ -66,7 +66,7 @@ Snork.SerializableMail does implicit conversions from the built-in .NET types to
                 }
             }
     
-        private static string SerializeToJson(MailMessage mailMessage)
+            private static string SerializeToJson(MailMessage mailMessage)
             {
                 //perform implicit conversion between types here
                 SerializableMessage newMessage = mailMessage;
