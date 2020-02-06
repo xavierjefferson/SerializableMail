@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -6,27 +7,79 @@ using System.Text;
 
 namespace Snork.SerializableMail
 {
-    public class SerializableMailMessage
+    [Serializable]
+    public class SerializableMessage
     {
-        public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
+        private List<SerializableAttachment> _attachments;
+        private SerializableAddressCollection _cc, _bcc, _replyToList, _to;
+        private SerializableHeaderCollection _headers;
+
+        public SerializableMessage()
+        {
+            _to = new SerializableAddressCollection();
+            _cc = new SerializableAddressCollection();
+            _bcc = new SerializableAddressCollection();
+            _replyToList = new SerializableAddressCollection();
+            _attachments = new List<SerializableAttachment>();
+            _headers = new SerializableHeaderCollection();
+        }
+
+        public SerializableHeaderCollection Headers
+        {
+            get => _headers;
+            set => _headers =
+                value ?? throw new ArgumentNullException(nameof(Headers));
+        }
+
         public string Body { get; set; }
         public string Subject { get; set; }
-        public SerializableMailAddress From { get; set; }
-        public SerializableMailAddressList To { get; set; } = new SerializableMailAddressList();
-        public SerializableMailAddressList ReplyToList { get; set; } = new SerializableMailAddressList();
-        public SerializableMailAddressList CC { get; set; } = new SerializableMailAddressList();
-        public SerializableMailAddressList Bcc { get; set; } = new SerializableMailAddressList();
+
+        public SerializableAddress From { get; set; }
+
+        public SerializableAddressCollection To
+        {
+            get => _to;
+            set => _to = value ?? throw new ArgumentNullException(nameof(To));
+        }
+
+        public SerializableAddressCollection ReplyToList
+        {
+            get => _replyToList;
+            set => _replyToList =
+                value ?? throw new ArgumentNullException(nameof(ReplyToList));
+        }
+
+        public SerializableAddressCollection CC
+        {
+            get => _cc;
+            set => _cc = value ?? throw new ArgumentNullException(nameof(CC));
+        }
+
+        public SerializableAddressCollection Bcc
+        {
+            get => _bcc;
+            set =>
+                _bcc = value ?? throw new ArgumentNullException(nameof(Bcc));
+        }
+
         public TransferEncoding BodyTransferEncoding { get; set; }
         public bool IsBodyHtml { get; set; }
         public int HeadersCodePage { get; set; }
         public int BodyCodePage { get; set; }
-        public SerializableMailAddress Sender { get; set; }
+        public SerializableAddress Sender { get; set; }
         public DeliveryNotificationOptions DeliveryNotificationOptions { get; set; }
-        public List<SerializableMailAttachment> Attachments { get; set; } = new List<SerializableMailAttachment>();
+
+        public List<SerializableAttachment> Attachments
+        {
+            get => _attachments;
+            set => _attachments = value ?? throw new ArgumentNullException(nameof(Attachments));
+        }
+
         public MailPriority Priority { get; set; }
+
         public int SubjectCodePage { get; set; }
 
-        public static implicit operator MailMessage(SerializableMailMessage mailMessage)
+        public static implicit operator MailMessage(SerializableMessage mailMessage)
         {
             var result = new MailMessage
             {
@@ -64,12 +117,9 @@ namespace Snork.SerializableMail
             return result;
         }
 
-        public static implicit operator SerializableMailMessage(MailMessage mailMessage)
+        public static implicit operator SerializableMessage(MailMessage mailMessage)
         {
-            var headers = new Dictionary<string, string>();
-            foreach (string key in mailMessage.Headers.Keys)
-                headers[key] = mailMessage.Headers[key];
-            return new SerializableMailMessage
+            return new SerializableMessage
             {
                 Sender = mailMessage.Sender,
                 SubjectCodePage = mailMessage.SubjectEncoding.CodePage,
@@ -84,9 +134,9 @@ namespace Snork.SerializableMail
                 BodyCodePage = mailMessage.BodyEncoding.CodePage,
                 Body = mailMessage.Body,
                 IsBodyHtml = mailMessage.IsBodyHtml,
-                Headers = headers,
+                Headers = mailMessage.Headers,
                 DeliveryNotificationOptions = mailMessage.DeliveryNotificationOptions,
-                Attachments = mailMessage.Attachments.Cast<SerializableMailAttachment>().ToList(),
+                Attachments = mailMessage.Attachments.Cast<SerializableAttachment>().ToList(),
                 BodyTransferEncoding = mailMessage.BodyTransferEncoding
             };
         }
