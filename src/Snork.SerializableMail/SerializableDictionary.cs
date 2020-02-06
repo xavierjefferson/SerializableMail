@@ -5,7 +5,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace Snork.SerializableMail.SerializeDictionary
+namespace Snork.SerializableMail
 {
     /// <summary>
     ///     Represents an XML serializable collection of keys and values.
