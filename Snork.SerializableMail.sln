@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snork.SerializableMail", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snork.SerializableMail.Tests", "src\Snork.SerializableMail.Tests\Snork.SerializableMail.Tests.csproj", "{7B61664B-8555-4EC1-9A05-5BAE971E85A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snork.SampleApplication", "src\Snork.SampleApplication\Snork.SampleApplication.csproj", "{4D952A34-EB0A-4B26-ABC2-A58BB04BB1D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7B61664B-8555-4EC1-9A05-5BAE971E85A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B61664B-8555-4EC1-9A05-5BAE971E85A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B61664B-8555-4EC1-9A05-5BAE971E85A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D952A34-EB0A-4B26-ABC2-A58BB04BB1D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D952A34-EB0A-4B26-ABC2-A58BB04BB1D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D952A34-EB0A-4B26-ABC2-A58BB04BB1D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D952A34-EB0A-4B26-ABC2-A58BB04BB1D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
