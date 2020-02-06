@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snork.SerializableMail", "Snork.SerializableMail\Snork.SerializableMail.csproj", "{4DB3370F-3589-48E9-A82A-CA771D6E9F07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snork.SerializableMail", "src\Snork.SerializableMail\Snork.SerializableMail.csproj", "{4DB3370F-3589-48E9-A82A-CA771D6E9F07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snork.SerializableMail.Tests", "Snork.SerializableMail.Tests\Snork.SerializableMail.Tests.csproj", "{7B61664B-8555-4EC1-9A05-5BAE971E85A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snork.SerializableMail.Tests", "src\Snork.SerializableMail.Tests\Snork.SerializableMail.Tests.csproj", "{7B61664B-8555-4EC1-9A05-5BAE971E85A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
