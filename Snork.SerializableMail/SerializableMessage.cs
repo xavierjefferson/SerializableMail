@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
@@ -11,8 +10,12 @@ namespace Snork.SerializableMail
     public class SerializableMessage
     {
         private List<SerializableAttachment> _attachments;
+
+        private string _body;
         private SerializableAddressCollection _cc, _bcc, _replyToList, _to;
-        private SerializableHeaderCollection _headers;
+        private SerializableStringDictionary _headers;
+
+        private string _subject;
 
         public SerializableMessage()
         {
@@ -21,18 +24,35 @@ namespace Snork.SerializableMail
             _bcc = new SerializableAddressCollection();
             _replyToList = new SerializableAddressCollection();
             _attachments = new List<SerializableAttachment>();
-            _headers = new SerializableHeaderCollection();
+            _headers = new SerializableStringDictionary();
+            _subject = string.Empty;
+            _body = string.Empty;
         }
 
-        public SerializableHeaderCollection Headers
+        public SerializableMessage(SerializableAddress from, SerializableAddress to) : this()
+        {
+            To.Add(to);
+            From = from;
+        }
+
+        public SerializableStringDictionary Headers
         {
             get => _headers;
             set => _headers =
                 value ?? throw new ArgumentNullException(nameof(Headers));
         }
 
-        public string Body { get; set; }
-        public string Subject { get; set; }
+        public string Body
+        {
+            get => _body;
+            set => _body = value ?? string.Empty;
+        }
+
+        public string Subject
+        {
+            get => _subject;
+            set => _subject = value ?? string.Empty;
+        }
 
         public SerializableAddress From { get; set; }
 
@@ -64,8 +84,8 @@ namespace Snork.SerializableMail
 
         public TransferEncoding BodyTransferEncoding { get; set; }
         public bool IsBodyHtml { get; set; }
-        public int HeadersCodePage { get; set; }
-        public int BodyCodePage { get; set; }
+        public int? HeadersCodePage { get; set; }
+        public int? BodyCodePage { get; set; }
         public SerializableAddress Sender { get; set; }
         public DeliveryNotificationOptions DeliveryNotificationOptions { get; set; }
 
@@ -77,27 +97,29 @@ namespace Snork.SerializableMail
 
         public MailPriority Priority { get; set; }
 
-        public int SubjectCodePage { get; set; }
+        public int? SubjectCodePage { get; set; }
 
         public static implicit operator MailMessage(SerializableMessage mailMessage)
         {
             var result = new MailMessage
             {
                 From = mailMessage.From,
-                SubjectEncoding = Encoding.GetEncoding(mailMessage.SubjectCodePage),
                 IsBodyHtml = mailMessage.IsBodyHtml,
                 Sender = mailMessage.Sender,
                 Body = mailMessage.Body,
                 Subject = mailMessage.Subject,
                 DeliveryNotificationOptions = mailMessage.DeliveryNotificationOptions,
-                HeadersEncoding = Encoding.GetEncoding(mailMessage.HeadersCodePage),
-                BodyEncoding = Encoding.GetEncoding(mailMessage.BodyCodePage),
                 BodyTransferEncoding = mailMessage.BodyTransferEncoding,
                 Priority = mailMessage.Priority
             };
+            if (mailMessage.BodyCodePage.HasValue)
+                result.BodyEncoding = Encoding.GetEncoding(mailMessage.BodyCodePage.Value);
+            if (mailMessage.SubjectCodePage.HasValue)
+                result.SubjectEncoding = Encoding.GetEncoding(mailMessage.SubjectCodePage.Value);
 
-            foreach (var keyValuePair in mailMessage.Headers)
-                result.Headers[keyValuePair.Key] = keyValuePair.Value;
+            if (mailMessage.HeadersCodePage.HasValue)
+                result.HeadersEncoding = Encoding.GetEncoding(mailMessage.HeadersCodePage.Value);
+            mailMessage.Headers.CopyKeyValuePairs(result.Headers);
 
             foreach (var i in mailMessage.Attachments)
                 result.Attachments.Add(i);
@@ -119,26 +141,29 @@ namespace Snork.SerializableMail
 
         public static implicit operator SerializableMessage(MailMessage mailMessage)
         {
-            return new SerializableMessage
+            var result = new SerializableMessage
             {
                 Sender = mailMessage.Sender,
-                SubjectCodePage = mailMessage.SubjectEncoding.CodePage,
+                SubjectCodePage = mailMessage.SubjectEncoding?.CodePage,
                 To = mailMessage.To,
                 CC = mailMessage.CC,
                 Bcc = mailMessage.Bcc,
                 Subject = mailMessage.Subject,
                 ReplyToList = mailMessage.ReplyToList,
                 From = mailMessage.From,
-                HeadersCodePage = mailMessage.HeadersEncoding.CodePage,
+                HeadersCodePage = mailMessage.HeadersEncoding?.CodePage,
                 Priority = mailMessage.Priority,
-                BodyCodePage = mailMessage.BodyEncoding.CodePage,
+                BodyCodePage = mailMessage.BodyEncoding?.CodePage,
                 Body = mailMessage.Body,
                 IsBodyHtml = mailMessage.IsBodyHtml,
                 Headers = mailMessage.Headers,
                 DeliveryNotificationOptions = mailMessage.DeliveryNotificationOptions,
-                Attachments = mailMessage.Attachments.Cast<SerializableAttachment>().ToList(),
                 BodyTransferEncoding = mailMessage.BodyTransferEncoding
             };
+            var attachments = new List<SerializableAttachment>();
+            foreach (var attachment in mailMessage.Attachments) attachments.Add(attachment);
+            result.Attachments = attachments;
+            return result;
         }
     }
 }

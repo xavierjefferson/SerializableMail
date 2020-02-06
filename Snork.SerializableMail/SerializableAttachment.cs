@@ -133,14 +133,14 @@ namespace Snork.SerializableMail
         ///     An <see cref="T:int" /> value that specifies the code page for the name encoding. The default value is
         ///     determined from the name of the attachment.
         /// </returns>
-        public int NameEncodingCodePage { get; set; }
+        public int? NameEncodingCodePage { get; set; }
 
         /// <summary>Gets the MIME content disposition for this attachment.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Net.Mime.ContentDisposition" /> that provides the presentation information for this
+        ///     A <see cref="T:SerializableContentDisposition" /> that provides the presentation information for this
         ///     attachment.
         /// </returns>
-        public ContentDisposition ContentDisposition { get; set; }
+        public SerializableContentDisposition ContentDisposition { get; set; }
 
         /// <summary>Gets or sets the MIME content ID for this attachment.</summary>
         /// <returns>A <see cref="T:System.String" /> holding the content ID.</returns>
@@ -151,8 +151,8 @@ namespace Snork.SerializableMail
         public string ContentId { get; set; }
 
         /// <summary>Gets the content type of this attachment.</summary>
-        /// <returns>A <see cref="T:System.Net.Mime.ContentType" />.The content type for this attachment.</returns>
-        public ContentType ContentType { get; set; }
+        /// <returns>A <see cref="T:SerializableContentType" />.The content type for this attachment.</returns>
+        public SerializableContentType ContentType { get; set; }
 
         public byte[] ContentBytes { get; set; }
 
@@ -217,14 +217,18 @@ namespace Snork.SerializableMail
 
             var memoryStream = new MemoryStream(attachment.ContentBytes);
 
-            return new Attachment(memoryStream, attachment.ContentType)
+            var result = new Attachment(memoryStream, attachment.ContentType)
             {
                 Name = attachment.Name,
                 TransferEncoding = attachment.TransferEncoding,
-                NameEncoding = Encoding.GetEncoding(attachment.NameEncodingCodePage),
+                NameEncoding = attachment.NameEncodingCodePage.HasValue
+                    ? Encoding.GetEncoding(attachment.NameEncodingCodePage.Value)
+                    : null,
                 ContentId = attachment.ContentId,
                 ContentType = attachment.ContentType
             };
+            SerializableContentDisposition.CopyProperties(attachment.ContentDisposition, result.ContentDisposition);
+            return result;
         }
 
         private static void CloneAttachment(Attachment source, SerializableAttachment destination)
@@ -233,13 +237,13 @@ namespace Snork.SerializableMail
             destination.TransferEncoding = source.TransferEncoding;
             destination.ContentDisposition = source.ContentDisposition;
             destination.ContentId = source.ContentId;
-
-            destination.NameEncodingCodePage = source.NameEncoding.CodePage;
+            destination.ContentType = source.ContentType;
+            destination.NameEncodingCodePage = source.NameEncoding?.CodePage;
 
             using (var mx = new MemoryStream())
             {
                 source.ContentStream.CopyTo(mx);
-                destination.ContentBytes = mx.GetBuffer();
+                destination.ContentBytes = mx.ToArray();
             }
         }
 

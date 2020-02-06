@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using System;
+using System.Net.Mail;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,6 +21,38 @@ namespace Snork.SerializableMail.Tests
             Assert.AreEqual(serializableAddress.DisplayNameCodePage, displayNameEncoding.CodePage);
             Assert.AreEqual(serializableAddress.Address, mailAddress.Address);
             Assert.AreEqual(serializableAddress.DisplayName, mailAddress.DisplayName);
+        }
+
+        [TestMethod]
+        public void Overload1()
+        {
+            var serializableAddress = new SerializableAddress(address);
+            Assert.AreEqual(serializableAddress.DisplayNameCodePage, Encoding.GetEncoding("utf-8").CodePage);
+        }
+
+        [TestMethod]
+        public void Overload2()
+        {
+            var serializableAddress = new SerializableAddress(address, displayName, displayNameEncoding);
+            Assert.AreEqual(serializableAddress.DisplayNameCodePage, displayNameEncoding.CodePage);
+            Assert.AreEqual(serializableAddress.Address, address);
+            Assert.AreEqual(serializableAddress.DisplayName, displayName);
+        }
+
+        [TestMethod]
+        public void NullAddress()
+        {
+            Exception outer = null;
+            try
+            {
+                new SerializableAddress(null);
+            }
+            catch (Exception ex)
+            {
+                outer = ex;
+            }
+
+            Assert.IsNotNull(outer);
         }
 
         [TestMethod]

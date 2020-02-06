@@ -48,7 +48,9 @@
     <Compile Include="SerializableAddress.cs" />
     <Compile Include="SerializableAddressCollection.cs" />
     <Compile Include="SerializableAttachment.cs" />
-    <Compile Include="SerializableHeaderCollection.cs" />
+    <Compile Include="SerializableContentDisposition.cs" />
+    <Compile Include="SerializableContentType.cs" />
+    <Compile Include="SerializableStringDictionary.cs" />
     <Compile Include="SerializableMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
