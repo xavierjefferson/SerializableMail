@@ -1,4 +1,6 @@
 # Snork.SerializableMail
+[![Latest version](https://img.shields.io/nuget/v/Snork.SerializableMail.svg)](https://www.nuget.org/packages/Snork.SerializableMail/) 
+
 This is a library for C#.  In normal conditions, the following objects aren't serializable:
 
  - System.Net.Mail.Message
