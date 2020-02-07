@@ -1,3 +1,4 @@
+
 # Snork.SerializableMail
 [![Latest version](https://img.shields.io/nuget/v/Snork.SerializableMail.svg)](https://www.nuget.org/packages/Snork.SerializableMail/) 
 
@@ -12,7 +13,9 @@ This is a library for C#.  In normal conditions, the following objects aren't se
 
 This means that if you're interested in serializing the contents of a mail message to binary, XML, or JSON, you're normally going to be out of luck.
 
-Snork.SerializableMail does implicit conversions from the built-in .NET types to instances of classes that will serialize just fine.   This includes addresses, text encoding settings, and even the attachments.
+Snork.SerializableMail does implicit conversions from the built-in .NET types to instances of substitute classes that will serialize just fine.   This includes addresses, text encoding settings, and even the attachments.
+
+These substitute classes also do implicit conversions **back** to the objects in the System.Net.Mail namespace, with all properties, so it's just as easy to deserialize any serialized messages and send them using `SmtpClient.Send`.
 
 ## Sample Code (needs Newtonsoft.JSON package)
     using System;
@@ -53,7 +56,15 @@ Snork.SerializableMail does implicit conversions from the built-in .NET types to
                 Console.WriteLine();
                 Console.WriteLine("XML Version:");
                 Console.WriteLine(SerializeToXml(mailMessage));
+
+                //do an implicit conversion here
+                SerializableMailMessage sendMe = mailMessage;
+                using(var client = new SmtpClient()){
+                    //this will convert sendMe *back* to System.Net.MailMessage.
+                    client.Send(sendMe);
+                }
                 Console.ReadLine();
+
             }
     
             private static string SerializeToXml(MailMessage mailMessage)
