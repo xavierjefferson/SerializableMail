@@ -50,7 +50,6 @@
     <Compile Include="SerializableAttachment.cs" />
     <Compile Include="SerializableContentDisposition.cs" />
     <Compile Include="SerializableContentType.cs" />
-    <Compile Include="SerializableDictionary.cs" />
     <Compile Include="SerializableStringDictionary.cs" />
     <Compile Include="SerializableMessage.cs" />
   </ItemGroup>
