@@ -8,10 +8,13 @@ namespace Snork.SerializableMail
 {
     /// <summary>Represents an attachment to an e-mail.</summary>
     [Serializable]
-    public class SerializableAttachment
+    public class SerializableAttachment : IDisposable
     {
+        internal bool disposed;
+
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:SerializableAttachment" /> class with the specified content
+        ///     Initializes a new instance of the <see cref="T:Snork.SerializableMail.SerializableAttachment" /> class with the
+        ///     specified content
         ///     string.
         /// </summary>
         /// <param name="fileName">A <see cref="T:System.String" /> that contains a file path to use to create this attachment.</param>
@@ -23,11 +26,14 @@ namespace Snork.SerializableMail
         /// </exception>
         public SerializableAttachment(string fileName)
         {
+            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            if (fileName == string.Empty) throw new ArgumentException(nameof(fileName));
             CloneAttachment(new Attachment(fileName), this);
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:SerializableAttachment" /> class with the specified stream,
+        ///     Initializes a new instance of the <see cref="T:Snork.SerializableMail.SerializableAttachment" /> class with the
+        ///     specified stream,
         ///     name, and MIME type information.
         /// </summary>
         /// <param name="contentStream">A readable <see cref="T:System.IO.Stream" /> that contains the content for this attachment.</param>
@@ -48,11 +54,13 @@ namespace Snork.SerializableMail
         /// </exception>
         public SerializableAttachment(Stream contentStream, string name, string mediaType)
         {
+            if (contentStream == null) throw new ArgumentNullException(nameof(contentStream));
             CloneAttachment(new Attachment(contentStream, name, mediaType), this);
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:SerializableAttachment" /> class with the specified stream
+        ///     Initializes a new instance of the <see cref="T:Snork.SerializableMail.SerializableAttachment" /> class with the
+        ///     specified stream
         ///     and name.
         /// </summary>
         /// <param name="contentStream">A readable <see cref="T:System.IO.Stream" /> that contains the content for this attachment.</param>
@@ -72,7 +80,8 @@ namespace Snork.SerializableMail
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:SerializableAttachment" /> class with the specified content
+        ///     Initializes a new instance of the <see cref="T:Snork.SerializableMail.SerializableAttachment" /> class with the
+        ///     specified content
         ///     string and MIME type information.
         /// </summary>
         /// <param name="fileName">A <see cref="T:System.String" /> that contains the content for this attachment.</param>
@@ -92,7 +101,8 @@ namespace Snork.SerializableMail
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:SerializableAttachment" /> class with the specified stream
+        ///     Initializes a new instance of the <see cref="T:Snork.SerializableMail.SerializableAttachment" /> class with the
+        ///     specified stream
         ///     and content type.
         /// </summary>
         /// <param name="contentStream">A readable <see cref="T:System.IO.Stream" /> that contains the content for this attachment.</param>
@@ -126,8 +136,8 @@ namespace Snork.SerializableMail
         public string Name { get; set; }
 
         /// <summary>
-        ///     Specifies the encoding code page for the <see cref="T:SerializableAttachment" />
-        ///     <see cref="P:SerializableAttachment.Name" />.
+        ///     Specifies the encoding code page for the <see cref="T:Snork.SerializableMail.SerializableAttachment" />
+        ///     <see cref="P:Snork.SerializableMail.SerializableAttachment.Name" />.
         /// </summary>
         /// <returns>
         ///     An <see cref="T:int" /> value that specifies the code page for the name encoding. The default value is
@@ -137,7 +147,8 @@ namespace Snork.SerializableMail
 
         /// <summary>Gets the MIME content disposition for this attachment.</summary>
         /// <returns>
-        ///     A <see cref="T:SerializableContentDisposition" /> that provides the presentation information for this
+        ///     A <see cref="T:Snork.SerializableMail.SerializableContentDisposition" /> that provides the presentation information
+        ///     for this
         ///     attachment.
         /// </returns>
         public SerializableContentDisposition ContentDisposition { get; set; }
@@ -145,13 +156,13 @@ namespace Snork.SerializableMail
         /// <summary>Gets or sets the MIME content ID for this attachment.</summary>
         /// <returns>A <see cref="T:System.String" /> holding the content ID.</returns>
         /// <exception cref="T:System.ArgumentNullException">
-        ///     Attempted to set <see cref="P:SerializableAttachment.ContentId" /> to
+        ///     Attempted to set <see cref="P:Snork.SerializableMail.SerializableAttachment.ContentId" /> to
         ///     <see langword="null" />.
         /// </exception>
         public string ContentId { get; set; }
 
         /// <summary>Gets the content type of this attachment.</summary>
-        /// <returns>A <see cref="T:SerializableContentType" />.The content type for this attachment.</returns>
+        /// <returns>A <see cref="T:Snork.SerializableMail.SerializableContentType" />.The content type for this attachment.</returns>
         public SerializableContentType ContentType { get; set; }
 
         public byte[] ContentBytes { get; set; }
@@ -160,13 +171,34 @@ namespace Snork.SerializableMail
         /// <returns>A <see cref="T:System.Net.Mime.TransferEncoding" />.The encoding for this attachment. </returns>
         public TransferEncoding TransferEncoding { get; set; }
 
+        /// <summary>Releases the resources used by the <see cref="T:Snork.SerializableMail.SerializableAttachment" />. </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        /// <summary>
+        ///     Releases the unmanaged resources used by the <see cref="T:Snork.SerializableMail.SerializableAttachmen" /> and optionally
+        ///     releases the managed resources.
+        /// </summary>
+        /// <param name="disposing">
+        ///     <see langword="true" /> to release both managed and unmanaged resources; <see langword="false" /> to release only
+        ///     unmanaged resources.
+        /// </param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing || disposed)
+                return;
+            disposed = true;
+        }
+
         /// <summary>
         ///     Creates a mail attachment using the content from the specified string, and the specified MIME content type
         ///     name.
         /// </summary>
         /// <param name="content">A <see cref="T:System.String" /> that contains the content for this attachment.</param>
         /// <param name="name">The MIME content type name value in the content type associated with this attachment.</param>
-        /// <returns>An object of type <see cref="T:SerializableAttachment" />.</returns>
+        /// <returns>An object of type <see cref="T:Snork.SerializableMail.SerializableAttachment" />.</returns>
         public static SerializableAttachment CreateAttachmentFromString(string content, string name)
         {
             return Attachment.CreateAttachmentFromString(content, name);
@@ -181,7 +213,7 @@ namespace Snork.SerializableMail
         ///     A <see cref="T:System.Net.Mime.ContentType" /> object that represents the Multipurpose
         ///     Internet Mail Exchange (MIME) protocol Content-Type header to be used.
         /// </param>
-        /// <returns>An object of type <see cref="T:SerializableAttachment" />.</returns>
+        /// <returns>An object of type <see cref="T:Snork.SerializableMail.SerializableAttachment" />.</returns>
         public static SerializableAttachment CreateAttachmentFromString(
             string content,
             ContentType contentType)
@@ -200,7 +232,7 @@ namespace Snork.SerializableMail
         ///     A <see cref="T:System.String" /> that contains the MIME Content-Header information for this
         ///     attachment. This value can be <see langword="null" />.
         /// </param>
-        /// <returns>An object of type <see cref="T:SerializableAttachment" />.</returns>
+        /// <returns>An object of type <see cref="T:Snork.SerializableMail.SerializableAttachment" />.</returns>
         public static SerializableAttachment CreateAttachmentFromString(
             string content,
             string name,
@@ -240,10 +272,10 @@ namespace Snork.SerializableMail
             destination.ContentType = source.ContentType;
             destination.NameEncodingCodePage = source.NameEncoding?.CodePage;
 
-            using (var mx = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             {
-                source.ContentStream.CopyTo(mx);
-                destination.ContentBytes = mx.ToArray();
+                source.ContentStream.CopyTo(memoryStream);
+                destination.ContentBytes = memoryStream.ToArray();
             }
         }
 

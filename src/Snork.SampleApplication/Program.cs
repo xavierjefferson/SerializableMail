@@ -6,22 +6,24 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Snork.SerializableMail;
 
-namespace SampleApplication
+namespace Snork.SampleApplication
 {
     internal class Program
     {
         private static void Main(string[] args)
         {
             //build a message
-            var mailMessage = new MailMessage("fromme@somewhere.com", "toyou@somewhere.com");
-            mailMessage.Subject = "This is the subject";
-            mailMessage.Body = "This is the body";
-            mailMessage.IsBodyHtml = true;
-            mailMessage.Headers["X-Something-Here"] = "something we don't need";
+            var mailMessage = new SerializableMessage("fromme@somewhere.com", "toyou@somewhere.com")
+            {
+                Subject = "This is the subject",
+                Body = "This is the body",
+                IsBodyHtml = true,
+                Headers = {["X-Something-Here"] = "something we don't need"}
+            };
 
             //create a memory stream for the attachment
             var memoryStream = new MemoryStream();
-            using (var streamWriter = new StreamWriter(memoryStream, Encoding.Unicode, 1000, true))
+            using (var streamWriter = new StreamWriter(memoryStream, Encoding.ASCII, 1000, true))
             {
                 streamWriter.Write("This is the attachment contents");
             }
@@ -36,26 +38,30 @@ namespace SampleApplication
             Console.WriteLine();
             Console.WriteLine("XML Version:");
             Console.WriteLine(SerializeToXml(mailMessage));
+            Console.WriteLine();
+            Console.WriteLine("Press ENTER to send");
+            Console.ReadLine();
+            using (var client = new SmtpClient())
+            {
+                //perform implicit conversion between types here.  No other code is necessary!
+                client.Send(mailMessage);
+            }
             Console.ReadLine();
         }
 
         private static string SerializeToXml(MailMessage mailMessage)
         {
-            //perform implicit conversion between types here
-            SerializableMessage newMessage = mailMessage;
             var xmlSerializer = new XmlSerializer(typeof(SerializableMessage));
             using (var stringWriter = new StringWriter())
             {
-                xmlSerializer.Serialize(stringWriter, newMessage);
+                xmlSerializer.Serialize(stringWriter, (SerializableMessage) mailMessage);
                 return stringWriter.ToString();
             }
         }
 
         private static string SerializeToJson(MailMessage mailMessage)
         {
-            //perform implicit conversion between types here
-            SerializableMessage newMessage = mailMessage;
-            return JsonConvert.SerializeObject(newMessage, Formatting.Indented);
+            return JsonConvert.SerializeObject((SerializableMessage) mailMessage, Formatting.Indented);
         }
     }
 }

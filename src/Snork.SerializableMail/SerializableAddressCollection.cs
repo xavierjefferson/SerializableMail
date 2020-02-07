@@ -21,13 +21,13 @@ namespace Snork.SerializableMail
 
         /// <summary>Add a list of e-mail addresses to the collection.</summary>
         /// <param name="addresses">
-        ///     The e-mail addresses to add to the <see cref="T:System.Net.Mail.MailAddressCollection" />.
+        ///     The e-mail addresses to add to the <see cref="T:Snork.SerializableMail.SerializableMailAddressCollection" />.
         ///     Multiple e-mail addresses must be separated with a comma character (",").
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">The<paramref name=" addresses" /> parameter is null.</exception>
         /// <exception cref="T:System.ArgumentException">The<paramref name=" addresses" /> parameter is an empty string.</exception>
         /// <exception cref="T:System.FormatException">
-        ///     The<paramref name=" addresses" /> parameter contains an e-mail address that
+        ///     The<paramref name="addresses" /> parameter contains an e-mail address that
         ///     is invalid or not supported.
         /// </exception>
         public void Add(string addresses)
@@ -40,7 +40,7 @@ namespace Snork.SerializableMail
 
         /// <summary>
         ///     Returns a string representation of the e-mail addresses in this
-        ///     <see cref="T: Snork.SerializableMail.SerializableMailAddressList" /> object.
+        ///     <see cref="T:Snork.SerializableMail.SerializableMailAddressCollection" /> object.
         /// </summary>
         /// <returns>A <see cref="T:System.String" /> containing the e-mail addresses in this collection.</returns>
         public override string ToString()
@@ -60,10 +60,7 @@ namespace Snork.SerializableMail
         public static implicit operator SerializableAddressCollection(MailAddressCollection list)
         {
             if (list == null) return null;
-            var result = new SerializableAddressCollection();
-            foreach (var item in list) result.Add(item);
-
-            return result;
+            return new SerializableAddressCollection(list.Select(i => (SerializableAddress) i));
         }
     }
 }

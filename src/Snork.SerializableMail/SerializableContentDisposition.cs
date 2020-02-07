@@ -34,10 +34,10 @@ namespace Snork.SerializableMail
         public long Size { get; set; }
         public DateTime ReadDate { get; set; }
 
-        /// <summary>Returns a string representation of this <see cref="T:SerializableContentDisposition" /> object.</summary>
+        /// <summary>Returns a string representation of this <see cref="T:Snork.SerializableMail.SerializableContentDisposition" /> object.</summary>
         /// <returns>
         ///     A <see cref="T:System.String" /> that contains the current settings for this
-        ///     <see cref="T:SerializableContentDisposition" />.
+        ///     <see cref="T:Snork.SerializableMail.SerializableContentDisposition" />.
         /// </returns>
         public override string ToString()
         {

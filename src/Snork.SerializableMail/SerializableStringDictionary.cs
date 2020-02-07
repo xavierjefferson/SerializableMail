@@ -12,7 +12,6 @@ namespace Snork.SerializableMail
     public class SerializableStringDictionary : Dictionary<string, string>, IXmlSerializable
     {
         private const string ElementName = "Item";
-
         private const string NameAttribute = "Name";
         private const string ValueAttribute = "Value";
 
