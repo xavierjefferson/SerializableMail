@@ -106,7 +106,7 @@ namespace Snork.SerializableMail
         {
             if (string.IsNullOrEmpty(DisplayName))
                 return Address;
-            return string.Format("\"{0}\" {1}", DisplayName, Address);
+            return $"\"{DisplayName}\" {Address}";
         }
 
         public static implicit operator MailAddress(SerializableAddress address)

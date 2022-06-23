@@ -14,9 +14,15 @@ namespace Snork.SerializableMail
         {
             int? codePage = null;
 
-            var fieldInfo = MailAddressType.GetField("displayNameEncoding", BindingFlags
+            var fieldInfo = MailAddressType.GetField("_displayNameEncoding", BindingFlags
                                                                                 .GetField | BindingFlags.NonPublic |
                                                                             BindingFlags.Instance);
+            if (fieldInfo == null)
+            {
+                fieldInfo = MailAddressType.GetField("displayNameEncoding", BindingFlags
+                                                                                     .GetField | BindingFlags.NonPublic |
+                                                                                 BindingFlags.Instance);
+            }
 
             if (fieldInfo != null &&
                 fieldInfo.FieldType == EncodingType) codePage = (fieldInfo.GetValue(address) as Encoding).CodePage;

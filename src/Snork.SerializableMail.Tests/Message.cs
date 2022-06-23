@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using Xunit;
 
 namespace Snork.SerializableMail.Tests
 {
-    [TestClass]
     public class Message
     {
         private const string address = "ok@ok.com";
@@ -17,7 +18,7 @@ namespace Snork.SerializableMail.Tests
         private const string displayName = "Yes";
         private static readonly Encoding displayNameEncoding = Encoding.ASCII;
 
-        [TestMethod]
+        [Fact]
         public void MailAddressToSerializableAddress()
         {
             var mailMessage = new MailMessage(new MailAddress(address, displayName), new MailAddress(Toaddress))
@@ -35,12 +36,12 @@ namespace Snork.SerializableMail.Tests
 
             memoryStream.Position = 0;
             mailMessage.Attachments.Add(new Attachment(memoryStream, new ContentType("text/plain")));
-            
+
             SerializableMessage serializableMessage = mailMessage;
             Compare(mailMessage, serializableMessage);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializableAddressToMailAddress()
         {
             var serializableMessage = new SerializableMessage(new SerializableAddress(address, displayName),
@@ -49,41 +50,37 @@ namespace Snork.SerializableMail.Tests
             MailMessage mailMessage = serializableMessage;
             Compare(mailMessage, serializableMessage);
         }
-
+ 
         private static void Compare(MailMessage mailMessage, SerializableMessage serializableMessage)
         {
-            Assert.AreEqual(mailMessage.To.Count, serializableMessage.To.Count, "To-count failed");
-            Assert.AreEqual(mailMessage.CC.Count, serializableMessage.CC.Count, "Cc-count failed");
-            Assert.AreEqual(mailMessage.Bcc.Count, serializableMessage.Bcc.Count, "Bcc-count failed");
-            Assert.AreEqual(mailMessage.ReplyToList.Count, serializableMessage.ReplyToList.Count,
-                "Replytolist-count failed");
-            Assert.AreEqual(mailMessage.Attachments.Count, serializableMessage.Attachments.Count,
-                "Attachment-count failed");
-            Assert.AreEqual(mailMessage.Subject, serializableMessage.Subject, "Subject failed");
-            Assert.AreEqual(mailMessage.Body, serializableMessage.Body, "Body failed");
-            Assert.AreEqual(mailMessage.IsBodyHtml, serializableMessage.IsBodyHtml, "IsBodyHtml failed");
-            Assert.AreEqual(mailMessage.BodyEncoding,
+            Assert.Equal(mailMessage.To.Count, serializableMessage.To.Count);
+            Assert.Equal(mailMessage.CC.Count, serializableMessage.CC.Count);
+            Assert.Equal(mailMessage.Bcc.Count, serializableMessage.Bcc.Count);
+            Assert.Equal(mailMessage.ReplyToList.Count, serializableMessage.ReplyToList.Count);
+            Assert.Equal(mailMessage.Attachments.Count, serializableMessage.Attachments.Count);
+            Assert.Equal(mailMessage.Subject, serializableMessage.Subject);
+            Assert.Equal(mailMessage.Body, serializableMessage.Body);
+            Assert.Equal(mailMessage.IsBodyHtml, serializableMessage.IsBodyHtml);
+            Assert.Equal(mailMessage.BodyEncoding,
                 serializableMessage.BodyCodePage == null
                     ? null
-                    : Encoding.GetEncoding(serializableMessage.BodyCodePage.Value), "BodyCodePage failed");
-            Assert.AreEqual(mailMessage.HeadersEncoding,
+                    : Encoding.GetEncoding(serializableMessage.BodyCodePage.Value));
+            Assert.Equal(mailMessage.HeadersEncoding,
                 serializableMessage.HeadersCodePage == null
                     ? null
-                    : Encoding.GetEncoding(serializableMessage.HeadersCodePage.Value), "HeadersCodePage failed");
-            Assert.AreEqual(mailMessage.SubjectEncoding,
+                    : Encoding.GetEncoding(serializableMessage.HeadersCodePage.Value));
+            Assert.Equal(mailMessage.SubjectEncoding,
                 serializableMessage.SubjectCodePage == null
                     ? null
-                    : Encoding.GetEncoding(serializableMessage.SubjectCodePage.Value), "SubjectCodePage failed");
-            foreach (var tuple in mailMessage.Attachments.Select((item, index) => new {Item = item, Index = index}))
+                    : Encoding.GetEncoding(serializableMessage.SubjectCodePage.Value));
+            foreach (var tuple in mailMessage.Attachments.Select((item, index) => new { Item = item, Index = index }))
             {
                 var serializableAttachment = serializableMessage.Attachments[tuple.Index];
                 if (tuple.Item.ContentStream.CanSeek)
-                    Assert.AreEqual(tuple.Item.ContentStream.Length, serializableAttachment.ContentBytes.Length,
-                        string.Format("Attachment length mismatch for item {0}", tuple.Index));
+                    Assert.Equal(tuple.Item.ContentStream.Length, serializableAttachment.ContentBytes.Length);
 
-                Assert.AreEqual(tuple.Item.Name, serializableAttachment.Name);
-                Assert.AreEqual(tuple.Item.ContentType.ToString(), serializableAttachment.ContentType.ToString(),
-                    "Content Type failed");
+                Assert.Equal(tuple.Item.Name, serializableAttachment.Name);
+                Assert.Equal(tuple.Item.ContentType.ToString(), serializableAttachment.ContentType.ToString());
                 var contentDisposition = tuple.Item.ContentDisposition;
                 var serializableAttachmentContentDisposition = serializableAttachment.ContentDisposition;
 
@@ -94,26 +91,19 @@ namespace Snork.SerializableMail.Tests
         private static void Compare(ContentDisposition contentDisposition,
             SerializableContentDisposition serializableAttachmentContentDisposition)
         {
-            Assert.AreEqual(contentDisposition.Parameters.Count, serializableAttachmentContentDisposition.Parameters.Count,
-                "Content Disposition param count failed");
-            Assert.AreEqual(contentDisposition.CreationDate, serializableAttachmentContentDisposition.CreationDate,
-                "Content Disposition creation date failed");
-            Assert.AreEqual(contentDisposition.ModificationDate,
-                serializableAttachmentContentDisposition.ModificationDate,
-                "Content Disposition modification date failed");
-            Assert.AreEqual(contentDisposition.Size, serializableAttachmentContentDisposition.Size,
-                "Content Disposition size failed");
-            Assert.AreEqual(contentDisposition.FileName, serializableAttachmentContentDisposition.FileName,
-                "Content Disposition filename failed");
-            Assert.AreEqual(contentDisposition.DispositionType,
-                serializableAttachmentContentDisposition.DispositionType,
-                "Content Disposition disp typefailed");
-            Assert.AreEqual(contentDisposition.Inline, serializableAttachmentContentDisposition.Inline,
-                "Content Disposition inline failed");
+            Assert.Equal(contentDisposition.Parameters.Count, serializableAttachmentContentDisposition.Parameters.Count);
+            Assert.Equal(contentDisposition.CreationDate, serializableAttachmentContentDisposition.CreationDate);
+            Assert.Equal(contentDisposition.ModificationDate,
+                serializableAttachmentContentDisposition.ModificationDate);
+            Assert.Equal(contentDisposition.Size, serializableAttachmentContentDisposition.Size);
+            Assert.Equal(contentDisposition.FileName, serializableAttachmentContentDisposition.FileName);
+            Assert.Equal(contentDisposition.DispositionType,
+                serializableAttachmentContentDisposition.DispositionType);
+            Assert.Equal(contentDisposition.Inline, serializableAttachmentContentDisposition.Inline);
         }
 
 
-        //[TestMethod]
+        //[Fact]
         //public void SerializableAddressToMailAddress()
         //{
         //    var serializableAddress = new SerializableAddress(address, displayName, displayNameEncoding);
@@ -121,17 +111,17 @@ namespace Snork.SerializableMail.Tests
         //    MailAddress mailAddress = serializableAddress;
         //    var codePage = CodePageHelper.GetCodePage(mailAddress);
         //    Assert.IsTrue(codePage.HasValue);
-        //    Assert.AreEqual(codePage.Value, displayNameEncoding.CodePage);
-        //    Assert.AreEqual(mailAddress.Address, serializableAddress.Address);
-        //    Assert.AreEqual(mailAddress.DisplayName, serializableAddress.DisplayName);
+        //    Assert.Equal(codePage.Value, displayNameEncoding.CodePage);
+        //    Assert.Equal(mailAddress.Address, serializableAddress.Address);
+        //    Assert.Equal(mailAddress.DisplayName, serializableAddress.DisplayName);
         //}
 
-        //[TestMethod]
+        //[Fact]
         //public void SerializableAddressCompare()
         //{
         //    var a1 = new SerializableAddress(address);
         //    var a2 = new SerializableAddress(address);
-        //    Assert.AreEqual(a1, a2);
+        //    Assert.Equal(a1, a2);
         //}
     }
 }

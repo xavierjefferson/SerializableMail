@@ -1,13 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.572
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32106.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snork.SerializableMail", "src\Snork.SerializableMail\Snork.SerializableMail.csproj", "{4DB3370F-3589-48E9-A82A-CA771D6E9F07}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snork.SerializableMail.Tests", "src\Snork.SerializableMail.Tests\Snork.SerializableMail.Tests.csproj", "{7B61664B-8555-4EC1-9A05-5BAE971E85A2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snork.SampleApplication", "src\Snork.SampleApplication\Snork.SampleApplication.csproj", "{4D952A34-EB0A-4B26-ABC2-A58BB04BB1D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snork.SerializableMail", "src\Snork.SerializableMail\Snork.SerializableMail.csproj", "{B4509323-1907-4201-8F5C-0086A9DC8EE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snork.SerializableMail.Tests", "src\Snork.SerializableMail.Tests\Snork.SerializableMail.Tests.csproj", "{335AC9D5-CD55-417A-B700-469046AF0C47}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{EEBF7428-0C45-4620-8F85-9C5C75D198C5}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.MD = LICENSE.MD
+		README.md = README.md
+		nuspecs\Snork.SerializableMail.nuspec = nuspecs\Snork.SerializableMail.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +22,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4DB3370F-3589-48E9-A82A-CA771D6E9F07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DB3370F-3589-48E9-A82A-CA771D6E9F07}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DB3370F-3589-48E9-A82A-CA771D6E9F07}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DB3370F-3589-48E9-A82A-CA771D6E9F07}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7B61664B-8555-4EC1-9A05-5BAE971E85A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B61664B-8555-4EC1-9A05-5BAE971E85A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B61664B-8555-4EC1-9A05-5BAE971E85A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B61664B-8555-4EC1-9A05-5BAE971E85A2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4D952A34-EB0A-4B26-ABC2-A58BB04BB1D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4D952A34-EB0A-4B26-ABC2-A58BB04BB1D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D952A34-EB0A-4B26-ABC2-A58BB04BB1D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D952A34-EB0A-4B26-ABC2-A58BB04BB1D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4509323-1907-4201-8F5C-0086A9DC8EE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4509323-1907-4201-8F5C-0086A9DC8EE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4509323-1907-4201-8F5C-0086A9DC8EE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4509323-1907-4201-8F5C-0086A9DC8EE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{335AC9D5-CD55-417A-B700-469046AF0C47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{335AC9D5-CD55-417A-B700-469046AF0C47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{335AC9D5-CD55-417A-B700-469046AF0C47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{335AC9D5-CD55-417A-B700-469046AF0C47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
